@@ -1,17 +1,15 @@
 package com.example.carbonproject.controller.advice;
 
 import com.example.carbonproject.entity.response.RespPlainBean;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
 
@@ -34,6 +32,14 @@ public class GlobalExceptionController {
     public ResponseEntity<RespPlainBean> MethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         String errorMsg = "传入的参数类型有误！";
         String failedMsg = e.getMostSpecificCause().getMessage();
+        return new ResponseEntity<>(RespPlainBean.error(HttpStatus.BAD_REQUEST.value(), errorMsg, failedMsg), HttpStatus.BAD_REQUEST);
+    }
+
+    //传入了空值或缺少部分参数
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<RespPlainBean> MissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        String errorMsg = "传入的参数有误！";
+        String failedMsg = e.getParameterName() + "参数没有被传入！";
         return new ResponseEntity<>(RespPlainBean.error(HttpStatus.BAD_REQUEST.value(), errorMsg, failedMsg), HttpStatus.BAD_REQUEST);
     }
 

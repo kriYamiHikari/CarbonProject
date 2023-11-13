@@ -25,3 +25,4 @@ mybatis:
   configuration:
     # 自动将下划线命名转换为驼峰命名
     map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
