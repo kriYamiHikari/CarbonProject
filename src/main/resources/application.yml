@@ -1,0 +1,27 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    #    建立数据库连接
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/carbon
+    username: root
+    password: 123456
+  devtools:
+    #    启动热部署
+    restart:
+      enabled: true
+      additional-exclude: src/main/java
+      exclude: static/**
+  servlet:
+    #    修改文件上传大小限制
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  mvc:
+    #    如果找不到对应的处理器，将抛出异常
+    throw-exception-if-no-handler-found: true
+mybatis:
+  configuration:
+    # 自动将下划线命名转换为驼峰命名
+    map-underscore-to-camel-case: true
