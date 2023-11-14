@@ -11,6 +11,15 @@ public interface MusicInfoMapper {
     @Select("select count(*) from music_info")
     int getMusicInfoTableCount();
 
+    @Select("select count(*) from music_info where title like concat('%', #{title}, '%') and artist like concat('%', #{artist}, '%') and language like concat('%', #{language}, '%') and description like concat('%', #{description}, '%') and release_time = #{releaseTime}")
+    int getMusicInfoTableCountByParamsAndPointTime(MusicInfo musicInfo);
+
+    @Select("select count(*) from music_info where title like concat('%', #{title}, '%') and artist like concat('%', #{artist}, '%') and language like concat('%', #{language}, '%') and description like concat('%', #{description}, '%')")
+    int getMusicInfoTableCountByParamsAndNullPointTime(MusicInfo musicInfo);
+
+    @Select("select count(*) from music_info where title like concat('%', #{musicInfo.title}, '%') and artist like concat('%', #{musicInfo.artist}, '%') and language like concat('%', #{musicInfo.language} ,'%') and description like concat('%', #{musicInfo.description}, '%') and release_time between #{startTime} and #{endTime}")
+    int getMusicInfoTableCountByParamsAndBetweenTime(MusicInfo musicInfo, String startTime, String endTime);
+
     @Select("select * from music_info limit #{offset},#{pageSize}")
     List<MusicInfo> getMusicInfoFromPage(int offset, int pageSize);
 

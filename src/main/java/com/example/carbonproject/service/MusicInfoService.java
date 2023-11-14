@@ -18,6 +18,18 @@ public class MusicInfoService {
         return musicInfoMapper.getMusicInfoTableCount();
     }
 
+    public int getMusicInfoTableCountByParamsAndPointTime(MusicInfo musicInfo) {
+        return musicInfoMapper.getMusicInfoTableCountByParamsAndPointTime(musicInfo);
+    }
+
+    public int getMusicInfoTableCountByParamsAndNullPointTime(MusicInfo musicInfo) {
+        return musicInfoMapper.getMusicInfoTableCountByParamsAndNullPointTime(musicInfo);
+    }
+
+    public int getMusicInfoTableCountByParamsAndBetweenTime(MusicInfo musicInfo, String startTime, String endTime) {
+        return musicInfoMapper.getMusicInfoTableCountByParamsAndBetweenTime(musicInfo, startTime, endTime);
+    }
+
     public List<MusicInfo> getMusicInfoFromPage(int nowPage, int pageSize) {
         int offset = 0;
         if (nowPage > 1) {
@@ -31,11 +43,15 @@ public class MusicInfoService {
         if (nowPage > 1) {
             offset = (nowPage - 1) * pageSize;
         }
-        if (musicInfo.getReleaseTime() == null) {
-            return musicInfoMapper.getMusicInfoFromPageByParamsAndNullPointTime(musicInfo, offset, pageSize);
-        } else {
-            return musicInfoMapper.getMusicInfoFromPageByParamsAndPointTime(musicInfo, offset, pageSize);
+        return musicInfoMapper.getMusicInfoFromPageByParamsAndPointTime(musicInfo, offset, pageSize);
+    }
+
+    public List<MusicInfo> getMusicInfoFromPageByParamsAndNullPointTime(MusicInfo musicInfo, int nowPage, int pageSize) {
+        int offset = 0;
+        if (nowPage > 1) {
+            offset = (nowPage - 1) * pageSize;
         }
+        return musicInfoMapper.getMusicInfoFromPageByParamsAndNullPointTime(musicInfo, offset, pageSize);
     }
 
     public List<MusicInfo> getMusicInfoFromPageByParamsAndBetweenTime(MusicInfo musicInfo, int nowPage, int pageSize, String startTime, String endTime) {

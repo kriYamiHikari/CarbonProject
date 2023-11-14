@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class MusicInfoController {
     private final MusicInfoService musicInfoService;
 
@@ -44,11 +45,23 @@ public class MusicInfoController {
         if (pageSize == 0) {
             throw new DataIntegrityViolationException("pageSize不能为空或为0!");
         } else {
-            List<MusicInfo> musicInfoList = musicInfoService.getMusicInfoFromPageByParamsAndPointTime(musicInfo, nowPage, pageSize);
-            if (musicInfoList.isEmpty()) {
-                return RespPageDataBean.warning(ActionMsg.QUERY_SUCCESS_BY_EMPTY, 0, musicInfoService.getMusicInfoTableCount(), pageSize, nowPage, null);
+            List<MusicInfo> musicInfoList;
+            boolean releaseTimeNull = false;
+            if (musicInfo.getReleaseTime() == null) {
+                musicInfoList = musicInfoService.getMusicInfoFromPageByParamsAndNullPointTime(musicInfo, nowPage, pageSize);
+                releaseTimeNull = true;
+            } else {
+                musicInfoList = musicInfoService.getMusicInfoFromPageByParamsAndPointTime(musicInfo, nowPage, pageSize);
             }
-            return RespPageDataBean.success(ActionMsg.QUERY_SUCCESS_BY_EMPTY, musicInfoList.size(), musicInfoService.getMusicInfoTableCount(), pageSize, nowPage, musicInfoList);
+            if (musicInfoList.isEmpty()) {
+                return RespPageDataBean.warning(ActionMsg.QUERY_SUCCESS_BY_EMPTY, 0, 0, pageSize, nowPage, null);
+            }
+            if (releaseTimeNull) {
+                return RespPageDataBean.success(ActionMsg.QUERY_SUCCESS, musicInfoList.size(), musicInfoService.getMusicInfoTableCountByParamsAndNullPointTime(musicInfo), pageSize, nowPage, musicInfoList);
+            } else {
+                return RespPageDataBean.success(ActionMsg.QUERY_SUCCESS, musicInfoList.size(), musicInfoService.getMusicInfoTableCountByParamsAndPointTime(musicInfo), pageSize, nowPage, musicInfoList);
+            }
+
         }
     }
 
@@ -72,9 +85,9 @@ public class MusicInfoController {
                 }
                 List<MusicInfo> musicInfoList = musicInfoService.getMusicInfoFromPageByParamsAndBetweenTime(musicInfo, nowPage, pageSize, startTime, endTime);
                 if (musicInfoList.isEmpty()) {
-                    return RespPageDataBean.warning(ActionMsg.QUERY_SUCCESS_BY_EMPTY, 0, musicInfoService.getMusicInfoTableCount(), pageSize, nowPage, null);
+                    return RespPageDataBean.warning(ActionMsg.QUERY_SUCCESS_BY_EMPTY, 0, 0, pageSize, nowPage, null);
                 }
-                return RespPageDataBean.success(ActionMsg.QUERY_SUCCESS, musicInfoList.size(), musicInfoService.getMusicInfoTableCount(), pageSize, nowPage, musicInfoList);
+                return RespPageDataBean.success(ActionMsg.QUERY_SUCCESS, musicInfoList.size(), musicInfoService.getMusicInfoTableCountByParamsAndBetweenTime(musicInfo, startTime, endTime), pageSize, nowPage, musicInfoList);
             }
         }
     }
