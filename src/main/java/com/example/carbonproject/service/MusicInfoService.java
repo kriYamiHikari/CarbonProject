@@ -30,6 +30,11 @@ public class MusicInfoService {
         return musicInfoMapper.getMusicInfoTableCountByParamsAndBetweenTime(musicInfo, startTime, endTime);
     }
 
+    public int getMusicInfoCountById(int id) {
+        return musicInfoMapper.getMusicInfoCountById(id);
+    }
+
+
     public List<MusicInfo> getMusicInfoFromPage(int nowPage, int pageSize) {
         int offset = 0;
         if (nowPage > 1) {
@@ -64,5 +69,13 @@ public class MusicInfoService {
 
     public void deleteMusicInfoMultipleById(List<Integer> id) {
         musicInfoMapper.deleteMusicInfoMultipleById(id);
+    }
+
+    public void addMusicInfo(MusicInfo musicInfo) {
+        musicInfoMapper.addMusicInfo(musicInfo);
+    }
+
+    public void updateMusicInfoById(MusicInfo musicInfo) {
+        musicInfoMapper.updateMusicInfoById(musicInfo);
     }
 }

@@ -97,4 +97,19 @@ public class MusicInfoController {
         musicInfoService.deleteMusicInfoMultipleById(id);
         return RespPlainBean.success(ActionMsg.DELETE_SUCCESS);
     }
+
+    @PostMapping("/music/addMusicInfo")
+    public RespPlainBean addMusicInfo(@RequestBody MusicInfo musicInfo) {
+        musicInfoService.addMusicInfo(musicInfo);
+        return RespPlainBean.success(ActionMsg.ADD_SUCCESS);
+    }
+
+    @PutMapping("/music/updateMusicInfoById")
+    public RespPlainBean updateMusicInfoById(@RequestBody MusicInfo musicInfo) {
+        if (musicInfoService.getMusicInfoCountById(musicInfo.getId()) == 0) {
+            throw new DataIntegrityViolationException("该歌曲不存在!请检查id是否传达正确！");
+        }
+        musicInfoService.updateMusicInfoById(musicInfo);
+        return RespPlainBean.success(ActionMsg.UPDATE_SUCCESS);
+    }
 }
