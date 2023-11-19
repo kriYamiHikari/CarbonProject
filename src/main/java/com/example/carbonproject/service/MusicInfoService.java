@@ -35,34 +35,34 @@ public class MusicInfoService {
     }
 
 
-    public List<MusicInfo> getMusicInfoFromPage(int nowPage, int pageSize) {
+    public List<MusicInfo> getMusicInfoFromPage(int currentPage, int pageSize) {
         int offset = 0;
-        if (nowPage > 1) {
-            offset = (nowPage - 1) * pageSize;
+        if (currentPage > 1) {
+            offset = (currentPage - 1) * pageSize;
         }
         return musicInfoMapper.getMusicInfoFromPage(offset, pageSize);
     }
 
-    public List<MusicInfo> getMusicInfoFromPageByParamsAndPointTime(MusicInfo musicInfo, int nowPage, int pageSize) {
+    public List<MusicInfo> getMusicInfoFromPageByParamsAndPointTime(MusicInfo musicInfo, int currentPage, int pageSize) {
         int offset = 0;
-        if (nowPage > 1) {
-            offset = (nowPage - 1) * pageSize;
+        if (currentPage > 1) {
+            offset = (currentPage - 1) * pageSize;
         }
         return musicInfoMapper.getMusicInfoFromPageByParamsAndPointTime(musicInfo, offset, pageSize);
     }
 
-    public List<MusicInfo> getMusicInfoFromPageByParamsAndNullPointTime(MusicInfo musicInfo, int nowPage, int pageSize) {
+    public List<MusicInfo> getMusicInfoFromPageByParamsAndNullPointTime(MusicInfo musicInfo, int currentPage, int pageSize) {
         int offset = 0;
-        if (nowPage > 1) {
-            offset = (nowPage - 1) * pageSize;
+        if (currentPage > 1) {
+            offset = (currentPage - 1) * pageSize;
         }
         return musicInfoMapper.getMusicInfoFromPageByParamsAndNullPointTime(musicInfo, offset, pageSize);
     }
 
-    public List<MusicInfo> getMusicInfoFromPageByParamsAndBetweenTime(MusicInfo musicInfo, int nowPage, int pageSize, String startTime, String endTime) {
+    public List<MusicInfo> getMusicInfoFromPageByParamsAndBetweenTime(MusicInfo musicInfo, int currentPage, int pageSize, String startTime, String endTime) {
         int offset = 0;
-        if (nowPage > 1) {
-            offset = (nowPage - 1) * pageSize;
+        if (currentPage > 1) {
+            offset = (currentPage - 1) * pageSize;
         }
         return musicInfoMapper.getMusicInfoFromPageByParamsAndBetweenTime(musicInfo, offset, pageSize, startTime, endTime);
     }

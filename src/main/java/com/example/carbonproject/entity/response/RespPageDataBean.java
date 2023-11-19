@@ -1,5 +1,9 @@
 package com.example.carbonproject.entity.response;
 
+import com.example.carbonproject.utils.ObjectUtil;
+
+import java.util.List;
+
 public class RespPageDataBean {
     private int code;
     private String msg;
@@ -7,7 +11,8 @@ public class RespPageDataBean {
     private int count;
     private int tableCount;
     private int pageSize;
-    private int nowPage;
+    private int currentPage;
+    private List<String> columnProps;
     private Object data;
 
     public int getCode() {
@@ -58,12 +63,20 @@ public class RespPageDataBean {
         this.pageSize = pageSize;
     }
 
-    public int getNowPage() {
-        return nowPage;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
-    public void setNowPage(int nowPage) {
-        this.nowPage = nowPage;
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public List<String> getColumnProps() {
+        return columnProps;
+    }
+
+    public void setColumnProps(List<String> columnProps) {
+        this.columnProps = columnProps;
     }
 
     public Object getData() {
@@ -74,29 +87,31 @@ public class RespPageDataBean {
         this.data = data;
     }
 
-    public static RespPageDataBean success(String msg, int count, int tableCount, int pageLimit, int nowPage, Object data) {
+    public static RespPageDataBean success(String msg, int count, int tableCount, int pageLimit, int currentPage, List<?> data) {
         RespPageDataBean respPageDataBean = new RespPageDataBean();
         respPageDataBean.setCode(200);
         respPageDataBean.setMsg(msg);
         respPageDataBean.setType("success");
-        respPageDataBean.setCount(count);
-        respPageDataBean.setTableCount(tableCount);
-        respPageDataBean.setPageSize(pageLimit);
-        respPageDataBean.setNowPage(nowPage);
-        respPageDataBean.setData(data);
-        return respPageDataBean;
+        return getRespPageDataBean(count, tableCount, pageLimit, currentPage, data, respPageDataBean);
     }
 
-    public static RespPageDataBean warning(String msg, int count, int tableCount, int pageLimit, int nowPage, Object data) {
+    public static RespPageDataBean warning(String msg, int count, int tableCount, int pageLimit, int currentPage, List<?> data) {
         RespPageDataBean respPageDataBean = new RespPageDataBean();
         respPageDataBean.setCode(200);
         respPageDataBean.setMsg(msg);
         respPageDataBean.setType("warning");
+        return getRespPageDataBean(count, tableCount, pageLimit, currentPage, data, respPageDataBean);
+    }
+
+    private static RespPageDataBean getRespPageDataBean(int count, int tableCount, int pageLimit, int nowPage, List<?> data, RespPageDataBean respPageDataBean) {
         respPageDataBean.setCount(count);
         respPageDataBean.setTableCount(tableCount);
         respPageDataBean.setPageSize(pageLimit);
-        respPageDataBean.setNowPage(nowPage);
+        respPageDataBean.setCurrentPage(nowPage);
         respPageDataBean.setData(data);
+        if (data != null) {
+            respPageDataBean.setColumnProps(ObjectUtil.getObjectFieldNames(data.get(0)));
+        }
         return respPageDataBean;
     }
 }
