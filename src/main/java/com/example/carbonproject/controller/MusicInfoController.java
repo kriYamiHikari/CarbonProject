@@ -1,6 +1,7 @@
 package com.example.carbonproject.controller;
 
 import com.example.carbonproject.entity.MusicInfo;
+import com.example.carbonproject.entity.MusicInfoAll;
 import com.example.carbonproject.entity.msg.ActionMsg;
 import com.example.carbonproject.entity.response.RespPageDataBean;
 import com.example.carbonproject.entity.response.RespPlainBean;
@@ -22,6 +23,22 @@ public class MusicInfoController {
         this.musicInfoService = musicInfoService;
     }
 
+    @GetMapping("getMusicInfoAll")
+    public RespPageDataBean getMusicInfoAll(int currentPage, @RequestParam int pageSize) {
+        if (currentPage == 0) {
+            currentPage = 1;
+        }
+        if (pageSize == 0) {
+            throw new DataIntegrityViolationException("pageSize不能为空或为0!");
+        } else {
+            List<MusicInfoAll> musicInfoList = musicInfoService.getMusicInfoAll(currentPage, pageSize);
+            if (musicInfoList.isEmpty()) {
+                return RespPageDataBean.warning(ActionMsg.QUERY_SUCCESS_BY_EMPTY, 0, musicInfoService.getMusicInfoTableCount(), pageSize, currentPage, null);
+            }
+            return RespPageDataBean.warning(ActionMsg.QUERY_SUCCESS_BY_EMPTY, musicInfoList.size(), musicInfoService.getMusicInfoTableCount(), pageSize, currentPage, musicInfoList);
+        }
+
+    }
     @GetMapping("getMusicInfoFromPage")
     public RespPageDataBean getMusicInfoFromPage(int currentPage, @RequestParam int pageSize) {
         if (currentPage == 0) {

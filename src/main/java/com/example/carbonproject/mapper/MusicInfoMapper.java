@@ -1,7 +1,7 @@
 package com.example.carbonproject.mapper;
 
 import com.example.carbonproject.entity.MusicInfo;
-import com.example.carbonproject.service.MusicInfoService;
+import com.example.carbonproject.entity.MusicInfoAll;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -47,4 +47,7 @@ public interface MusicInfoMapper {
 
     @Update("update music_info set title = #{title}, artist = #{artist}, language = #{language}, description = #{description}, release_time = #{releaseTime} where id = #{id}")
     void updateMusicInfoById(MusicInfo musicInfo);
+
+    @Select("select * from music_info limit #{offset},#{pageSize}")
+    List<MusicInfoAll> getMusicInfoAll(int offset, int pageSize);
 }

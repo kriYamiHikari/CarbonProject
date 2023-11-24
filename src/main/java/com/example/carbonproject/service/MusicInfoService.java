@@ -1,6 +1,7 @@
 package com.example.carbonproject.service;
 
 import com.example.carbonproject.entity.MusicInfo;
+import com.example.carbonproject.entity.MusicInfoAll;
 import com.example.carbonproject.mapper.MusicInfoMapper;
 import org.springframework.stereotype.Service;
 
@@ -77,5 +78,13 @@ public class MusicInfoService {
 
     public void updateMusicInfoById(MusicInfo musicInfo) {
         musicInfoMapper.updateMusicInfoById(musicInfo);
+    }
+
+    public List<MusicInfoAll> getMusicInfoAll(int currentPage, int pageSize) {
+        int offset = 0;
+        if (currentPage > 1) {
+            offset = (currentPage - 1) * pageSize;
+        }
+        return musicInfoMapper.getMusicInfoAll(offset, pageSize);
     }
 }
