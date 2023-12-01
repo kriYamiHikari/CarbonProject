@@ -1,9 +1,11 @@
 server:
+  #  修改服务器端口
   port: 9090
 spring:
   datasource:
-    #    建立数据库连接
+    #  建立数据库连接
     driver-class-name: com.mysql.cj.jdbc.Driver
+    #    此处的carbon替换成对应的数据库名
     url: jdbc:mysql://localhost:3306/carbon
     username: root
     password: 123456
@@ -11,7 +13,9 @@ spring:
     #    启动热部署
     restart:
       enabled: true
+      #      需要被热部署的目录
       additional-exclude: src/main/java
+      #      热部署排除目录
       exclude: static/**
   servlet:
     #    修改文件上传大小限制
@@ -25,7 +29,9 @@ mybatis:
   configuration:
     # 自动将下划线命名转换为驼峰命名
     map-underscore-to-camel-case: true
+  #    指定mapper文件的目录，下述目录为一般情况
   mapper-locations: classpath:mapper/*.xml
 logging:
+  #  修改日志等级，开发环境建议debug
   level:
     root: debug

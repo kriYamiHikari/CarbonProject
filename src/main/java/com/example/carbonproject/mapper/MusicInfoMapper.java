@@ -2,6 +2,7 @@ package com.example.carbonproject.mapper;
 
 import com.example.carbonproject.entity.MusicInfo;
 import com.example.carbonproject.entity.MusicInfoAll;
+import com.example.carbonproject.entity.response.AbcTestEntity;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -50,4 +51,8 @@ public interface MusicInfoMapper {
 
     @Select("select * from music_info limit #{offset},#{pageSize}")
     List<MusicInfoAll> getMusicInfoAll(int offset, int pageSize);
+
+
+    @Select("select floor(`interval`/60) as minute,count(*) as count from music_info group by floor(`interval`/60) order by floor(`interval`/60)")
+    List<AbcTestEntity> testAbc();
 }

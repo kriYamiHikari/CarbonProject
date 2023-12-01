@@ -1,20 +1,28 @@
 package com.example.carbonproject.controller;
 
+import ch.qos.logback.core.util.FileUtil;
 import com.example.carbonproject.entity.MusicInfo;
 import com.example.carbonproject.entity.MusicInfoAll;
 import com.example.carbonproject.entity.msg.ActionMsg;
+import com.example.carbonproject.entity.response.RespDataBean;
 import com.example.carbonproject.entity.response.RespPageDataBean;
 import com.example.carbonproject.entity.response.RespPlainBean;
 import com.example.carbonproject.service.MusicInfoService;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/music")
 public class MusicInfoController {
     private final MusicInfoService musicInfoService;
@@ -129,5 +137,34 @@ public class MusicInfoController {
         }
         musicInfoService.updateMusicInfoById(musicInfo);
         return RespPlainBean.success(ActionMsg.UPDATE_SUCCESS);
+    }
+
+    @GetMapping("testAbc")
+    public RespDataBean testAbc() {
+        return RespDataBean.success("测试接口", 0, musicInfoService.testAbc());
+    }
+
+    @PostMapping("testUpload")
+    public RespPlainBean testUpload(MultipartFile file) {
+        int result = musicInfoService.testUploadFile(file);
+        if (result == 0) {
+            return RespPlainBean.success("上传成功");
+        } else {
+            return RespPlainBean.error(400, "上传失败", "error");
+        }
+    }
+
+    @GetMapping("testDownload/{filename}")
+    public void download(@PathVariable String filename, HttpServletResponse response) throws IOException {
+        String rootPath = System.getProperty("user.dir");
+        String filePath = rootPath + "\\files\\" + filename;
+        File file = new File(filePath);
+        if (file.exists()) {
+            byte[] fileData = Files.readAllBytes(Paths.get(filePath));
+            ServletOutputStream outputStream = response.getOutputStream();
+            outputStream.write(fileData);
+            outputStream.flush();
+            outputStream.close();
+        }
     }
 }

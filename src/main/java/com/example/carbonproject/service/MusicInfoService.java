@@ -2,9 +2,12 @@ package com.example.carbonproject.service;
 
 import com.example.carbonproject.entity.MusicInfo;
 import com.example.carbonproject.entity.MusicInfoAll;
+import com.example.carbonproject.entity.response.AbcTestEntity;
 import com.example.carbonproject.mapper.MusicInfoMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -87,4 +90,30 @@ public class MusicInfoService {
         }
         return musicInfoMapper.getMusicInfoAll(offset, pageSize);
     }
+
+    public List<AbcTestEntity> testAbc() {
+        return musicInfoMapper.testAbc();
+    }
+
+    public int testUploadFile(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+        String mainName = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+        String suffix = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+
+        String projectPath = System.getProperty("user.dir");
+        String filepath = projectPath + "\\files";
+        String path = filepath + "\\" + mainName + "." + suffix;
+        File saveFile = new File(path);
+        if (!saveFile.getParentFile().exists()) {
+            saveFile.getParentFile().mkdirs();
+        }
+        try {
+            file.transferTo(saveFile);
+            return 0;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
 }
