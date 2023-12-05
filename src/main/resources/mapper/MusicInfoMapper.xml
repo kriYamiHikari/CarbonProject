@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.carbonproject.mapper.MusicInfoMapper">
+    <select id="getMusicInfoList">
+        select * from music_info_copy
+        where 1=1
+        <if test="musicInfo.title != null and musicInfo.title != ''">
+            and title like concat('%',#{musicInfo.title},'%')
+        </if>
+        <if test="musicInfo.artist != null and musicInfo.artist != ''">
+            and artist like concat('%',#{musicInfo.artist},'%')
+        </if>
+        <if test="musicInfo.language != null and musicInfo.language != ''">
+            and language like concat('%',#{musicInfo.language},'%')
+        </if>
+        <if test="musicInfo.description != null and musicInfo.description != ''">
+            and description like concat('%',#{musicInfo.description},'%')
+        </if>
+        <choose>
+            <when test="startTime != null and endTime!=null">
+                and release_time between #{startTime} and #{endTime}
+            </when>
+            <when test="musicInfo.releaseTime != null and musicInfo.releaseTime != ''">
+                and release_time = #{releaseTime}
+            </when>
+        </choose>
+        limit #{offset},#{pageSize}
+    </select>
+    <select id="countMusicInfo">
+        select count(*) from music_info_copy
+        where 1=1
+        <if test="musicInfo.title != null and musicInfo.title != ''">
+            and title like concat('%',#{musicInfo.title},'%')
+        </if>
+        <if test="musicInfo.artist != null and musicInfo.artist != ''">
+            and artist like concat('%',#{musicInfo.artist},'%')
+        </if>
+        <if test="musicInfo.language != null and musicInfo.language != ''">
+            and language like concat('%',#{musicInfo.language},'%')
+        </if>
+        <if test="musicInfo.description != null and musicInfo.description != ''">
+            and description like concat('%',#{musicInfo.description},'%')
+        </if>
+        <choose>
+            <when test="startTime != null and endTime!=null">
+                and release_time between #{startTime} and #{endTime}
+            </when>
+            <when test="musicInfo.releaseTime != null and musicInfo.releaseTime != ''">
+                and release_time = #{releaseTime}
+            </when>
+        </choose>
+    </select>
+</mapper>
