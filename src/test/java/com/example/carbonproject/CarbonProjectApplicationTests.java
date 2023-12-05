@@ -8,6 +8,6 @@ class CarbonProjectApplicationTests {
 
     @Test
     void contextLoads() {
-    }
 
+    }
 }

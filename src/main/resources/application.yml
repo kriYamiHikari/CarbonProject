@@ -1,0 +1,23 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/carbon
+    username: root
+    password: 123456
+  servlet:
+    multipart:
+      max-request-size: 20MB
+      max-file-size: 20MB
+  devtools:
+    restart:
+      additional-exclude: src/main/java
+      exclude: static/**
+      enabled: true
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+logging:
+  level:
+    root: debug

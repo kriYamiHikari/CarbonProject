@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.carbonproject.mapper.MusicInfoMapper">
+    <resultMap id="BaseResultMap" type="com.example.carbonproject.pojo.MusicInfo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="artist" jdbcType="VARCHAR" property="artist"/>
+        <result column="language" jdbcType="VARCHAR" property="language"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="release_time" jdbcType="DATE" property="releaseTime"/>
+        <result column="transname" jdbcType="VARCHAR" property="transname"/>
+        <result column="album" jdbcType="VARCHAR" property="album"/>
+        <result column="gain" jdbcType="DOUBLE" property="gain"/>
+        <result column="peak" jdbcType="DOUBLE" property="peak"/>
+        <result column="lra" jdbcType="DOUBLE" property="lra"/>
+        <result column="bpm" jdbcType="DOUBLE" property="bpm"/>
+        <result column="interval" jdbcType="DOUBLE" property="interval"/>
+        <result column="company" jdbcType="VARCHAR" property="company"/>
+        <result column="genre" jdbcType="VARCHAR" property="genre"/>
+        <result column="mid" jdbcType="VARCHAR" property="mid"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        id, title, artist, `language`, description, release_time, transname, album, gain,
+    peak, lra, bpm, `interval`, company, genre, mid
+    </sql>
+    <select id="selectByExample" parameterType="com.example.carbonproject.pojo.MusicInfoExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from music_info_copy
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from music_info_copy
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from music_info_copy
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.example.carbonproject.pojo.MusicInfoExample">
+        delete from music_info_copy
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.example.carbonproject.pojo.MusicInfo">
+        insert into music_info_copy (id, title, artist,
+                                     `language`, description, release_time,
+                                     transname, album, gain,
+                                     peak, lra, bpm, `interval`,
+                                     company, genre, mid)
+        values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{artist,jdbcType=VARCHAR},
+                #{language,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{releaseTime,jdbcType=DATE},
+                #{transname,jdbcType=VARCHAR}, #{album,jdbcType=VARCHAR}, #{gain,jdbcType=DOUBLE},
+                #{peak,jdbcType=DOUBLE}, #{lra,jdbcType=DOUBLE}, #{bpm,jdbcType=DOUBLE}, #{interval,jdbcType=DOUBLE},
+                #{company,jdbcType=VARCHAR}, #{genre,jdbcType=VARCHAR}, #{mid,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.example.carbonproject.pojo.MusicInfo">
+        insert into music_info_copy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="artist != null">
+                artist,
+            </if>
+            <if test="language != null">
+                `language`,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="releaseTime != null">
+                release_time,
+            </if>
+            <if test="transname != null">
+                transname,
+            </if>
+            <if test="album != null">
+                album,
+            </if>
+            <if test="gain != null">
+                gain,
+            </if>
+            <if test="peak != null">
+                peak,
+            </if>
+            <if test="lra != null">
+                lra,
+            </if>
+            <if test="bpm != null">
+                bpm,
+            </if>
+            <if test="interval != null">
+                `interval`,
+            </if>
+            <if test="company != null">
+                company,
+            </if>
+            <if test="genre != null">
+                genre,
+            </if>
+            <if test="mid != null">
+                mid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="artist != null">
+                #{artist,jdbcType=VARCHAR},
+            </if>
+            <if test="language != null">
+                #{language,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="releaseTime != null">
+                #{releaseTime,jdbcType=DATE},
+            </if>
+            <if test="transname != null">
+                #{transname,jdbcType=VARCHAR},
+            </if>
+            <if test="album != null">
+                #{album,jdbcType=VARCHAR},
+            </if>
+            <if test="gain != null">
+                #{gain,jdbcType=DOUBLE},
+            </if>
+            <if test="peak != null">
+                #{peak,jdbcType=DOUBLE},
+            </if>
+            <if test="lra != null">
+                #{lra,jdbcType=DOUBLE},
+            </if>
+            <if test="bpm != null">
+                #{bpm,jdbcType=DOUBLE},
+            </if>
+            <if test="interval != null">
+                #{interval,jdbcType=DOUBLE},
+            </if>
+            <if test="company != null">
+                #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="genre != null">
+                #{genre,jdbcType=VARCHAR},
+            </if>
+            <if test="mid != null">
+                #{mid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.example.carbonproject.pojo.MusicInfoExample"
+            resultType="java.lang.Long">
+        select count(*) from music_info_copy
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update music_info_copy
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.title != null">
+                title = #{record.title,jdbcType=VARCHAR},
+            </if>
+            <if test="record.artist != null">
+                artist = #{record.artist,jdbcType=VARCHAR},
+            </if>
+            <if test="record.language != null">
+                `language` = #{record.language,jdbcType=VARCHAR},
+            </if>
+            <if test="record.description != null">
+                description = #{record.description,jdbcType=VARCHAR},
+            </if>
+            <if test="record.releaseTime != null">
+                release_time = #{record.releaseTime,jdbcType=DATE},
+            </if>
+            <if test="record.transname != null">
+                transname = #{record.transname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.album != null">
+                album = #{record.album,jdbcType=VARCHAR},
+            </if>
+            <if test="record.gain != null">
+                gain = #{record.gain,jdbcType=DOUBLE},
+            </if>
+            <if test="record.peak != null">
+                peak = #{record.peak,jdbcType=DOUBLE},
+            </if>
+            <if test="record.lra != null">
+                lra = #{record.lra,jdbcType=DOUBLE},
+            </if>
+            <if test="record.bpm != null">
+                bpm = #{record.bpm,jdbcType=DOUBLE},
+            </if>
+            <if test="record.interval != null">
+                `interval` = #{record.interval,jdbcType=DOUBLE},
+            </if>
+            <if test="record.company != null">
+                company = #{record.company,jdbcType=VARCHAR},
+            </if>
+            <if test="record.genre != null">
+                genre = #{record.genre,jdbcType=VARCHAR},
+            </if>
+            <if test="record.mid != null">
+                mid = #{record.mid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update music_info_copy
+        set id = #{record.id,jdbcType=INTEGER},
+        title = #{record.title,jdbcType=VARCHAR},
+        artist = #{record.artist,jdbcType=VARCHAR},
+        `language` = #{record.language,jdbcType=VARCHAR},
+        description = #{record.description,jdbcType=VARCHAR},
+        release_time = #{record.releaseTime,jdbcType=DATE},
+        transname = #{record.transname,jdbcType=VARCHAR},
+        album = #{record.album,jdbcType=VARCHAR},
+        gain = #{record.gain,jdbcType=DOUBLE},
+        peak = #{record.peak,jdbcType=DOUBLE},
+        lra = #{record.lra,jdbcType=DOUBLE},
+        bpm = #{record.bpm,jdbcType=DOUBLE},
+        `interval` = #{record.interval,jdbcType=DOUBLE},
+        company = #{record.company,jdbcType=VARCHAR},
+        genre = #{record.genre,jdbcType=VARCHAR},
+        mid = #{record.mid,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.carbonproject.pojo.MusicInfo">
+        update music_info_copy
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="artist != null">
+                artist = #{artist,jdbcType=VARCHAR},
+            </if>
+            <if test="language != null">
+                `language` = #{language,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="releaseTime != null">
+                release_time = #{releaseTime,jdbcType=DATE},
+            </if>
+            <if test="transname != null">
+                transname = #{transname,jdbcType=VARCHAR},
+            </if>
+            <if test="album != null">
+                album = #{album,jdbcType=VARCHAR},
+            </if>
+            <if test="gain != null">
+                gain = #{gain,jdbcType=DOUBLE},
+            </if>
+            <if test="peak != null">
+                peak = #{peak,jdbcType=DOUBLE},
+            </if>
+            <if test="lra != null">
+                lra = #{lra,jdbcType=DOUBLE},
+            </if>
+            <if test="bpm != null">
+                bpm = #{bpm,jdbcType=DOUBLE},
+            </if>
+            <if test="interval != null">
+                `interval` = #{interval,jdbcType=DOUBLE},
+            </if>
+            <if test="company != null">
+                company = #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="genre != null">
+                genre = #{genre,jdbcType=VARCHAR},
+            </if>
+            <if test="mid != null">
+                mid = #{mid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.carbonproject.pojo.MusicInfo">
+        update music_info_copy
+        set title        = #{title,jdbcType=VARCHAR},
+            artist       = #{artist,jdbcType=VARCHAR},
+            `language`   = #{language,jdbcType=VARCHAR},
+            description  = #{description,jdbcType=VARCHAR},
+            release_time = #{releaseTime,jdbcType=DATE},
+            transname    = #{transname,jdbcType=VARCHAR},
+            album        = #{album,jdbcType=VARCHAR},
+            gain         = #{gain,jdbcType=DOUBLE},
+            peak         = #{peak,jdbcType=DOUBLE},
+            lra          = #{lra,jdbcType=DOUBLE},
+            bpm          = #{bpm,jdbcType=DOUBLE},
+            `interval`   = #{interval,jdbcType=DOUBLE},
+            company      = #{company,jdbcType=VARCHAR},
+            genre        = #{genre,jdbcType=VARCHAR},
+            mid          = #{mid,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
