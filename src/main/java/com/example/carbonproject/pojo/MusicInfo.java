@@ -1,5 +1,6 @@
 package com.example.carbonproject.pojo;
 
+import com.example.carbonproject.utils.TimeUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ public class MusicInfo {
     private String artist;
     private String language;
     private String description;
+
     private Date releaseTime;
     private String transname;
     private String album;
@@ -67,11 +69,11 @@ public class MusicInfo {
     public String getReleaseTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if (this.releaseTime != null) return sdf.format(this.releaseTime);
-        return "";
+        return null;
     }
 
-    public void setReleaseTime(Date releaseTime) {
-        this.releaseTime = releaseTime;
+    public void setReleaseTime(String releaseTime) {
+        this.releaseTime = TimeUtils.stringDateTest(releaseTime);
     }
 
     public String getTransname() {

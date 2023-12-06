@@ -79,12 +79,4 @@ public class RespPageDataBean {
         resp.setData(data);
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-
-    public static ResponseEntity<RespPageDataBean> error(HttpStatus failedHttpStatus, String msg) {
-        RespPageDataBean resp = new RespPageDataBean();
-        resp.setCode(failedHttpStatus.value());
-        resp.setMsg(msg);
-        resp.setType("error");
-        return new ResponseEntity<>(resp, failedHttpStatus);
-    }
 }

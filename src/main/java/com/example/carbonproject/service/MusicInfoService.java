@@ -3,6 +3,7 @@ package com.example.carbonproject.service;
 import com.example.carbonproject.mapper.MusicInfoMapper;
 import com.example.carbonproject.pojo.MusicInfo;
 import com.example.carbonproject.utils.TimeUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -24,5 +25,17 @@ public class MusicInfoService {
         int offset = 0;
         if (pageNum > 1) offset = (pageNum - 1) * pageSize;
         return musicInfoMapper.getMusicInfoList(musicInfo, startTime, endTime, offset, pageSize);
+    }
+
+    public void insertMusicInfo(MusicInfo musicInfo) {
+        musicInfoMapper.insertMusicInfo(musicInfo);
+    }
+
+    public void updateMusicInfoById(MusicInfo musicInfo) {
+        musicInfoMapper.updateMusicInfoById(musicInfo);
+    }
+
+    public void deleteMusicInfoByIds(List<Integer> ids) {
+        musicInfoMapper.deleteMusicInfoByIds(ids);
     }
 }

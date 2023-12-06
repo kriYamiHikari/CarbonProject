@@ -14,6 +14,8 @@ spring:
     multipart:
       max-request-size: 20MB
       max-file-size: 20MB
+  mvc:
+    throw-exception-if-no-handler-found: true
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

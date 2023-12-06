@@ -1,14 +1,13 @@
 package com.example.carbonproject.pojo.response;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class RespPlainBean {
+public class RespDataBean {
     private Integer code;
     private String msg;
-    private String failedMsg;
     private String type;
+    private Object data;
 
     public Integer getCode() {
         return code;
@@ -26,14 +25,6 @@ public class RespPlainBean {
         this.msg = msg;
     }
 
-    public String getFailedMsg() {
-        return failedMsg;
-    }
-
-    public void setFailedMsg(String failedMsg) {
-        this.failedMsg = failedMsg;
-    }
-
     public String getType() {
         return type;
     }
@@ -42,20 +33,20 @@ public class RespPlainBean {
         this.type = type;
     }
 
-    public static ResponseEntity<RespPlainBean> success(String msg) {
-        RespPlainBean resp = new RespPlainBean();
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public static ResponseEntity<RespDataBean> success(String msg, Object data) {
+        RespDataBean resp = new RespDataBean();
         resp.setCode(HttpStatus.OK.value());
         resp.setMsg(msg);
         resp.setType("success");
+        resp.setData(data);
         return new ResponseEntity<>(resp, HttpStatus.OK);
-    }
-
-    public static ResponseEntity<RespPlainBean> error(HttpStatus failedHttpStatus, String msg, String failedMsg) {
-        RespPlainBean resp = new RespPlainBean();
-        resp.setCode(failedHttpStatus.value());
-        resp.setMsg(msg);
-        resp.setFailedMsg(failedMsg);
-        resp.setType("error");
-        return new ResponseEntity<>(resp, failedHttpStatus);
     }
 }

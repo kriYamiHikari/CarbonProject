@@ -20,12 +20,13 @@
             <when test="startTime != null and endTime!=null">
                 and release_time between #{startTime} and #{endTime}
             </when>
-            <when test="musicInfo.releaseTime != null and musicInfo.releaseTime != ''">
+            <when test="musicInfo.releaseTime != null">
                 and release_time = #{releaseTime}
             </when>
         </choose>
         limit #{offset},#{pageSize}
     </select>
+
     <select id="countMusicInfo">
         select count(*) from music_info_copy
         where 1=1
@@ -45,9 +46,34 @@
             <when test="startTime != null and endTime!=null">
                 and release_time between #{startTime} and #{endTime}
             </when>
-            <when test="musicInfo.releaseTime != null and musicInfo.releaseTime != ''">
+            <when test="musicInfo.releaseTime != null">
                 and release_time = #{releaseTime}
             </when>
         </choose>
     </select>
+
+    <insert id="insertMusicInfo">
+        insert into music_info_copy (title, artist, language, description, release_time, transname, album, gain,
+                                     peak, lra, bpm, `interval`, company, genre, mid)
+        values (#{title}, #{artist}, #{language}, #{description}, #{releaseTime}, #{transname}, #{album}, #{gain},
+                #{peak}, #{lra}, #{bpm}, #{interval}, #{company}, #{genre}, #{mid})
+    </insert>
+
+    <update id="updateMusicInfoById">
+        update music_info_copy
+        set title=#{title},
+            artist=#{artist},
+            language=#{language},
+            description=#{description},
+            release_time=#{releaseTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMusicInfoByIds">
+        delete from music_info_copy
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

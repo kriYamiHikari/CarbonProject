@@ -1,17 +1,19 @@
 package com.example.carbonproject.controller;
 
+import com.example.carbonproject.mapper.MusicInfoMapper;
 import com.example.carbonproject.pojo.MusicInfo;
 import com.example.carbonproject.pojo.response.RespPageDataBean;
 import com.example.carbonproject.pojo.response.RespPlainBean;
 import com.example.carbonproject.service.MusicInfoService;
 import com.example.carbonproject.utils.TimeUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/music")
@@ -22,6 +24,16 @@ public class MusicInfoController {
         this.musicInfoService = musicInfoService;
     }
 
+    /**
+     * 获取音乐信息
+     *
+     * @param musicInfo 搜索基础条件
+     * @param startTime 开始日期
+     * @param endTime   结束日期
+     * @param pageNum   当前页
+     * @param pageSize  每页最大数量
+     * @return 根据条件返回音乐信息结果
+     */
     @GetMapping("/getMusicInfoList")
     public ResponseEntity<RespPageDataBean> getMusicInfoList(MusicInfo musicInfo, String startTime, String endTime, Integer pageNum, Integer pageSize) {
         int tableCount = musicInfoService.countMusicInfo(musicInfo, TimeUtils.stringDateTest(startTime), TimeUtils.stringDateTest(endTime));
@@ -32,6 +44,30 @@ public class MusicInfoController {
         if (pageNum > maxPage) pageNum = maxPage;
 
         List<MusicInfo> musicInfoList = musicInfoService.getMusicInfoList(musicInfo, TimeUtils.stringDateTest(startTime), TimeUtils.stringDateTest(endTime), pageNum, pageSize);
-        return RespPageDataBean.success("获取成功", tableCount, pageNum, pageSize, musicInfoList);
+        return RespPageDataBean.success("获取成功！", tableCount, pageNum, pageSize, musicInfoList);
+    }
+
+    /**
+     * 添加音乐
+     *
+     * @param musicInfo 音乐信息
+     * @return 添加结果
+     */
+    @PostMapping("insertMusicInfo")
+    public ResponseEntity<RespPlainBean> insertMusicInfo(@RequestBody MusicInfo musicInfo) {
+        musicInfoService.insertMusicInfo(musicInfo);
+        return RespPlainBean.success("添加成功！");
+    }
+
+    @PutMapping("updateMusicInfo")
+    public ResponseEntity<RespPlainBean> updateMusicInfo(@RequestBody MusicInfo musicInfo) {
+        musicInfoService.updateMusicInfoById(musicInfo);
+        return RespPlainBean.success("更新成功！");
+    }
+
+    @DeleteMapping("deleteMusicInfoByIds")
+    public ResponseEntity<RespPlainBean> deleteMusicInfo(@RequestBody List<Integer> ids) {
+        musicInfoService.deleteMusicInfoByIds(Objects.requireNonNull(ids));
+        return RespPlainBean.success("删除成功");
     }
 }
