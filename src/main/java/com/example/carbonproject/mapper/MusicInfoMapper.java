@@ -1,11 +1,9 @@
 package com.example.carbonproject.mapper;
 
-import com.example.carbonproject.pojo.MusicInfo;
+import com.example.carbonproject.entity.MusicInfo;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 @Mapper

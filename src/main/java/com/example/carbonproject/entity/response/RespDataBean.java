@@ -1,38 +1,10 @@
-package com.example.carbonproject.pojo.response;
+package com.example.carbonproject.entity.response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class RespDataBean {
-    private Integer code;
-    private String msg;
-    private String type;
+public class RespDataBean extends RespPlainBean {
     private Object data;
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public Object getData() {
         return data;
     }

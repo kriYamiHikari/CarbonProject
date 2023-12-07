@@ -1,6 +1,5 @@
-package com.example.carbonproject.pojo.response;
+package com.example.carbonproject.entity.response;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -40,6 +39,16 @@ public class RespPlainBean {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", failedMsg='" + failedMsg + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 
     public static ResponseEntity<RespPlainBean> success(String msg) {

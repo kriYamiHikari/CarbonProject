@@ -1,17 +1,14 @@
 package com.example.carbonproject.controller;
 
-import com.example.carbonproject.mapper.MusicInfoMapper;
-import com.example.carbonproject.pojo.MusicInfo;
-import com.example.carbonproject.pojo.response.RespPageDataBean;
-import com.example.carbonproject.pojo.response.RespPlainBean;
+import com.example.carbonproject.Annotaion.AdminOnly;
+import com.example.carbonproject.entity.MusicInfo;
+import com.example.carbonproject.entity.response.RespPageDataBean;
+import com.example.carbonproject.entity.response.RespPlainBean;
 import com.example.carbonproject.service.MusicInfoService;
 import com.example.carbonproject.utils.TimeUtils;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,18 +51,21 @@ public class MusicInfoController {
      * @return 添加结果
      */
     @PostMapping("insertMusicInfo")
+    @AdminOnly
     public ResponseEntity<RespPlainBean> insertMusicInfo(@RequestBody MusicInfo musicInfo) {
         musicInfoService.insertMusicInfo(musicInfo);
         return RespPlainBean.success("添加成功！");
     }
 
     @PutMapping("updateMusicInfo")
+    @AdminOnly
     public ResponseEntity<RespPlainBean> updateMusicInfo(@RequestBody MusicInfo musicInfo) {
         musicInfoService.updateMusicInfoById(musicInfo);
         return RespPlainBean.success("更新成功！");
     }
 
     @DeleteMapping("deleteMusicInfoByIds")
+    @AdminOnly
     public ResponseEntity<RespPlainBean> deleteMusicInfo(@RequestBody List<Integer> ids) {
         musicInfoService.deleteMusicInfoByIds(Objects.requireNonNull(ids));
         return RespPlainBean.success("删除成功");

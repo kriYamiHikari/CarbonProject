@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "config.jwt.secret",
+      "type": "java.lang.String",
+      "description": "Description for config.jwt.secret."
+    },
+    {
+      "name": "config.jwt.expire",
+      "type": "java.lang.String",
+      "description": "Description for config.jwt.expire."
+    },
+    {
+      "name": "config.jwt.header",
+      "type": "java.lang.String",
+      "description": "Description for config.jwt.header."
+    }
+  ]
+}

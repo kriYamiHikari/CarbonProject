@@ -1,11 +1,9 @@
-package com.example.carbonproject.pojo;
+package com.example.carbonproject.entity;
 
 import com.example.carbonproject.utils.TimeUtils;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.function.DoubleBinaryOperator;
 
 public class MusicInfo {
     private Integer id;

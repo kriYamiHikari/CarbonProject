@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.carbonproject.mapper.UserMapper">
+    <select id="getAllUserInfo">
+        select *
+        from user;
+    </select>
+    <select id="getUserInfoByEmail">
+        select *
+        from user
+        where email = #{email}
+    </select>
+    <insert id="insertUserInfo">
+        insert into user (username, password, create_time, is_admin, email)
+        VALUES (#{username}, #{password}, #{createTime}, #{isAdmin}, #{email})
+    </insert>
+    <delete id="deleteUserInfoByEmail">
+        delete
+        from user
+        where email = #{email}
+    </delete>
+    <update id="updateUserInfoByEmail">
+        update user
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="isAdmin != null">
+                is_admin = #{isAdmin},
+            </if>
+        </set>
+        where email = #{email}
+    </update>
+    <update id="updateUserEmail">
+        update user
+        set email = #{newEmail}
+        where email = #{oldEmail}
+    </update>
+    <select id="countByEmail">
+        select count(*)
+        from user
+        where email = #{email}
+    </select>
+</mapper>
