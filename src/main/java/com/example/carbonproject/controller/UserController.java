@@ -107,6 +107,27 @@ public class UserController {
     }
 
     /**
+     * 通过电子邮件获取用户信息。
+     *
+     * @param params 一个包含请求参数的HashMap对象，其中"email"键表示用户的电子邮件
+     * @return 一个包含RespDataBean对象的ResponseEntity对象，其中包含用户信息和成功消息（如果操作成功）
+     * @throws CustomException 如果"email"参数缺失或电子邮件在数据库中不存在
+     */
+    @PostMapping("/getUserInfoByEmail")
+    public ResponseEntity<RespDataBean> getUserInfoByEmail(@RequestBody HashMap<String, String> params) {
+        if (!StringUtils.hasText(params.get("email"))) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "参数错误！email为空");
+        }
+        String email = params.get("email");
+        if (!userService.emailExist(email)) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "该邮箱不存在，请重新输入");
+        }
+        User user = userService.getUserInfoByEmail(email);
+        user.setPassword("******");
+        return RespDataBean.success("获取用户信息成功！", user);
+    }
+
+    /**
      * 注册接口
      *
      * @param user 用户信息
