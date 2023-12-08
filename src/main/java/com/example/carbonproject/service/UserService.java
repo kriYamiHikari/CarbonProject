@@ -57,6 +57,7 @@ public class UserService {
     public void insertUserInfo(User user) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         user.setCreateTime(timestamp);
+        if (user.getIsAdmin() == null) user.setIsAdmin(0);
         userMapper.insertUserInfo(user);
     }
 
