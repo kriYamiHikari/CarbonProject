@@ -29,10 +29,10 @@ public class TokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpStatus.OK.value());
-            response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
-            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+//            response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
             response.setHeader("Access-Control-Allow-Headers", "content-type");
-            response.setHeader("access-control-allow-credentials", "true");
+//            response.setHeader("access-control-allow-credentials", "true");
         }
 
         // 如果是跳过权限控制的接口，直接放过

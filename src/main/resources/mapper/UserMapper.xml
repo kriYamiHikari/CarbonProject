@@ -31,6 +31,9 @@
             <if test="isAdmin != null">
                 is_admin = #{isAdmin},
             </if>
+            <if test="avatar != null">
+                avatar = #{avatar},
+            </if>
         </set>
         where email = #{email}
     </update>
@@ -41,6 +44,11 @@
     </update>
     <select id="countByEmail">
         select count(*)
+        from user
+        where email = #{email}
+    </select>
+    <select id="getUserAvatarByEmail">
+        select avatar
         from user
         where email = #{email}
     </select>

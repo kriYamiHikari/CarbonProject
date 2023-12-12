@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<RespPlainBean> dataIntegrityViolationException(DataIntegrityViolationException e) {
         String failedMsg = e.getMostSpecificCause().getMessage();
         return RespPlainBean.error(HttpStatus.BAD_REQUEST, "尝试对数据库操作时发生错误！", failedMsg);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<RespPlainBean> missingServletRequestParameterException(MissingServletRequestParameterException e) {
+        String failedMsg = e.getParameterName() + "参数缺失";
+        return RespPlainBean.error(HttpStatus.BAD_REQUEST, "请求参数缺少！处理失败！", failedMsg);
     }
 
     /**

@@ -20,4 +20,6 @@ public interface UserMapper {
     void updateUserEmail(String oldEmail, String newEmail);
 
     int countByEmail(String email);
+
+    String getUserAvatarByEmail(String email);
 }

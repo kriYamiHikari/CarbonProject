@@ -14,7 +14,7 @@ public class RespUserLoginBean extends RespDataBean {
         this.token = token;
     }
 
-    public static ResponseEntity<RespUserLoginBean> success(String msg, String token, Object data) {
+    public static ResponseEntity<RespUserLoginBean> success(String msg, String token, String avatar, Object data) {
         RespUserLoginBean resp = new RespUserLoginBean();
         resp.setCode(HttpStatus.OK.value());
         resp.setMsg(msg);

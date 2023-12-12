@@ -1,14 +1,24 @@
 package com.example.carbonproject.service;
 
 import com.example.carbonproject.controller.UserController;
+import com.example.carbonproject.controller.advice.CustomException;
 import com.example.carbonproject.entity.User;
 import com.example.carbonproject.mapper.UserMapper;
 import com.example.carbonproject.utils.CookieUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -18,6 +28,58 @@ public class UserService {
     public UserService(UserMapper userMapper, CookieUtils cookieUtils) {
         this.userMapper = userMapper;
         this.cookieUtils = cookieUtils;
+    }
+
+    public String getUserAvatarByEmail(String email) {
+        return userMapper.getUserAvatarByEmail(email);
+    }
+
+    public void updateUserAvatarByEmail(MultipartFile file, String email) {
+        User dataUserinfo = getUserInfoByEmail(email);
+
+        String originalFilename = file.getOriginalFilename();
+        String fileSuffix = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".") + 1) : null;
+
+        String projectPath = System.getProperty("user.dir");
+        String avatarPath = projectPath + "\\files\\avatars";
+
+        if (StringUtils.hasText(dataUserinfo.getAvatar())) {
+            File deleteFile = new File(avatarPath + "\\" + dataUserinfo.getAvatar());
+            boolean deleted = deleteFile.delete();
+        }
+
+        String imgFileName = UUID.randomUUID() + "." + fileSuffix;
+        String savePath = avatarPath + "\\" + imgFileName;
+        File saveFile = new File(savePath);
+        if (!saveFile.getParentFile().exists()) {
+            boolean created = saveFile.getParentFile().mkdirs();
+        }
+        try {
+            file.transferTo(saveFile);
+            User user = new User();
+            user.setEmail(email);
+            user.setAvatar(imgFileName);
+            userMapper.updateUserInfoByEmail(user);
+        } catch (IOException e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "上传头像失败");
+        }
+    }
+
+    public void downloadUserAvatar(String filename, HttpServletResponse response) {
+        String filePath = System.getProperty("user.dir") + "\\files\\avatars\\" + filename;
+        File file = new File(filePath);
+        if (file.exists()) {
+            response.setContentType("image/jpeg");
+            try {
+                byte[] fileData = Files.readAllBytes(Paths.get(filePath));
+                response.getOutputStream().write(fileData);
+                response.getOutputStream().flush();
+                response.getOutputStream().close();
+            } catch (IOException e) {
+                throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "下载头像失败");
+            }
+        }
+
     }
 
     /**
@@ -46,6 +108,9 @@ public class UserService {
      * @return 包含用户信息的User对象
      */
     public User getUserInfoByEmail(String email) {
+        if (!emailExist(email)) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "该邮箱不存在，请重新输入");
+        }
         return userMapper.getUserInfoByEmail(email);
     }
 

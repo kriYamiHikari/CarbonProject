@@ -7,16 +7,21 @@ import com.example.carbonproject.entity.User;
 import com.example.carbonproject.entity.response.RespDataBean;
 import com.example.carbonproject.entity.response.RespPlainBean;
 import com.example.carbonproject.entity.response.RespUserLoginBean;
+import com.example.carbonproject.mapper.UserMapper;
 import com.example.carbonproject.service.UserService;
 import com.example.carbonproject.utils.CookieUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+import javax.servlet.http.HttpServletResponse;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
@@ -24,7 +29,7 @@ public class UserController {
     private final UserService userService;
     private final JwtConfig jwtConfig;
 
-    public UserController(UserService userService, JwtConfig jwtConfig, CookieUtils cookieUtils) {
+    public UserController(UserService userService, JwtConfig jwtConfig) {
         this.userService = userService;
         this.jwtConfig = jwtConfig;
     }
@@ -32,16 +37,12 @@ public class UserController {
     /**
      * 更新用户邮箱
      *
-     * @param params 参数
+     * @param oldEmail 旧邮箱
+     * @param newEmail 新邮箱
      * @return 响应
      */
     @PutMapping("/updateEmail")
-    public ResponseEntity<RespPlainBean> updateUserEmail(HttpServletRequest request, @RequestBody HashMap<String, String> params) {
-        if (!StringUtils.hasText(params.get("oldEmail")) || !StringUtils.hasText(params.get("newEmail"))) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "参数错误！oldEmail或newEmail为空");
-        }
-        String oldEmail = params.get("oldEmail");
-        String newEmail = params.get("newEmail");
+    public ResponseEntity<RespPlainBean> updateUserEmail(HttpServletRequest request, @RequestParam String oldEmail, @RequestParam String newEmail) {
         if (!userService.emailExist(oldEmail)) throw new CustomException(HttpStatus.BAD_REQUEST, "该邮箱不存在！");
         if (userService.emailExist(newEmail)) throw new CustomException(HttpStatus.BAD_REQUEST, "该邮箱已被注册！");
         if (userService.notAdmin(request) && !userService.getRequestEmail(request).equals(oldEmail)) {
@@ -67,15 +68,11 @@ public class UserController {
     /**
      * 判断邮箱是否存在*
      *
-     * @param params 参数
+     * @param email 用户邮箱
      * @return boolean响应
      */
     @PostMapping("/emailExist")
-    public boolean emailExist(@RequestBody HashMap<String, String> params) {
-        if (!StringUtils.hasText(params.get("email"))) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "参数错误！email为空");
-        }
-        String email = params.get("email");
+    public boolean emailExist(@RequestParam String email) {
         return userService.emailExist(email);
     }
 
@@ -100,25 +97,40 @@ public class UserController {
             String token = jwtConfig.createToken(user.getEmail());
             String role = dateUserInfo.getIsAdmin() > 0 ? "管理员" : "用户";
             String msg = String.format("欢迎回来~ %s%s", role, dateUserInfo.getUsername());
-            return RespUserLoginBean.success(msg, token, dateUserInfo);
+            String userAvatarPath = userService.getUserAvatarByEmail(dateUserInfo.getEmail());
+            return RespUserLoginBean.success(msg, token, userAvatarPath, dateUserInfo);
         } else {
             throw new CustomException(HttpStatus.UNAUTHORIZED, "密码错误！请重新输入！");
         }
     }
 
+    @PostMapping("/uploadUserAvatar")
+    public ResponseEntity<RespPlainBean> uploadUserAvatar(MultipartFile file, @RequestParam String email, HttpServletRequest request) {
+        if (userService.notAdmin(request) && !userService.getRequestEmail(request).equals(email)) {
+            throw new CustomException(HttpStatus.FORBIDDEN, "权限不足！只有管理员可修改其他用户的头像");
+        }
+        if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "请上传图片文件");
+        }
+        userService.updateUserAvatarByEmail(file, email);
+        return RespPlainBean.success("上传头像成功！");
+    }
+
+    @GetMapping("/downloadUserAvatar/{filename}")
+    @SkipAuth
+    public void downloadUserAvatar(@PathVariable String filename, HttpServletResponse response) {
+        userService.downloadUserAvatar(filename, response);
+    }
+
     /**
      * 通过电子邮件获取用户信息。
      *
-     * @param params 一个包含请求参数的HashMap对象，其中"email"键表示用户的电子邮件
+     * @param email 用户的电子邮件
      * @return 一个包含RespDataBean对象的ResponseEntity对象，其中包含用户信息和成功消息（如果操作成功）
      * @throws CustomException 如果"email"参数缺失或电子邮件在数据库中不存在
      */
     @PostMapping("/getUserInfoByEmail")
-    public ResponseEntity<RespDataBean> getUserInfoByEmail(@RequestBody HashMap<String, String> params) {
-        if (!StringUtils.hasText(params.get("email"))) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "参数错误！email为空");
-        }
-        String email = params.get("email");
+    public ResponseEntity<RespDataBean> getUserInfoByEmail(@RequestParam String email) {
         if (!userService.emailExist(email)) {
             throw new CustomException(HttpStatus.BAD_REQUEST, "该邮箱不存在，请重新输入");
         }
@@ -176,22 +188,18 @@ public class UserController {
      * 根据邮箱删除用户信息
      *
      * @param request http请求
-     * @param params  参数
+     * @param email  邮箱
      * @return 响应
      */
     @DeleteMapping("/deleteUserInfoByEmail")
-    public ResponseEntity<RespPlainBean> deleteUserInfoByEmail(HttpServletRequest request, @RequestBody HashMap<String, String> params) {
-        String email = params.get("email");
-        if (!StringUtils.hasText(params.get("email"))) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "参数错误！email为空");
-        }
+    public ResponseEntity<RespPlainBean> deleteUserInfoByEmail(HttpServletRequest request, @RequestParam String email) {
         if (!userService.emailExist(email)) {
             throw new CustomException(HttpStatus.BAD_REQUEST, "该邮箱不存在，请重新输入");
         }
-        if (userService.notAdmin(request) && !params.get("email").equals(userService.getRequestEmail(request))) {
+        if (userService.notAdmin(request) && !email.equals(userService.getRequestEmail(request))) {
             throw new CustomException(HttpStatus.FORBIDDEN, "权限不足！只有管理员可删除其他用户");
         }
-        userService.deleteUserInfoByEmail(params.get("email"));
+        userService.deleteUserInfoByEmail(email);
         return RespPlainBean.success("用户删除成功");
     }
 
