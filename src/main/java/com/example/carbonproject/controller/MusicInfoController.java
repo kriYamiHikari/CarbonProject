@@ -1,6 +1,6 @@
 package com.example.carbonproject.controller;
 
-import com.example.carbonproject.Annotaion.AdminOnly;
+import com.example.carbonproject.annotation.AdminOnly;
 import com.example.carbonproject.entity.MusicInfo;
 import com.example.carbonproject.entity.response.RespPageDataBean;
 import com.example.carbonproject.entity.response.RespPlainBean;

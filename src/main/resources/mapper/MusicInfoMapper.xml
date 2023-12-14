@@ -24,7 +24,10 @@
                 and release_time = #{releaseTime}
             </when>
         </choose>
-        limit #{offset},#{pageSize}
+        <if test="offset != null and pageSize != null">
+            limit #{offset},#{pageSize}
+        </if>
+
     </select>
 
     <select id="countMusicInfo">
@@ -53,10 +56,23 @@
     </select>
 
     <insert id="insertMusicInfo">
-        insert into music_info_copy (title, artist, language, description, release_time, transname, album, gain,
-                                     peak, lra, bpm, `interval`, company, genre, mid)
-        values (#{title}, #{artist}, #{language}, #{description}, #{releaseTime}, #{transname}, #{album}, #{gain},
+        <choose>
+            <when test="id !=null">
+                insert into music_info_copy (id,title, artist, language, description, release_time, transname, album,
+                gain,
+                peak, lra, bpm, `interval`, company, genre, mid)
+                values (#{id},#{title}, #{artist}, #{language}, #{description}, #{releaseTime}, #{transname}, #{album},
+                #{gain},
                 #{peak}, #{lra}, #{bpm}, #{interval}, #{company}, #{genre}, #{mid})
+            </when>
+            <otherwise>
+                insert into music_info_copy (title, artist, language, description, release_time, transname, album, gain,
+                peak, lra, bpm, `interval`, company, genre, mid)
+                values (#{title}, #{artist}, #{language}, #{description}, #{releaseTime}, #{transname}, #{album},
+                #{gain},
+                #{peak}, #{lra}, #{bpm}, #{interval}, #{company}, #{genre}, #{mid})
+            </otherwise>
+        </choose>
     </insert>
 
     <update id="updateMusicInfoById">

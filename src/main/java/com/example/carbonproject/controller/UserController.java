@@ -1,15 +1,13 @@
 package com.example.carbonproject.controller;
 
 import com.example.carbonproject.config.JwtConfig;
-import com.example.carbonproject.Annotaion.SkipAuth;
+import com.example.carbonproject.annotation.SkipAuth;
 import com.example.carbonproject.controller.advice.CustomException;
 import com.example.carbonproject.entity.User;
 import com.example.carbonproject.entity.response.RespDataBean;
 import com.example.carbonproject.entity.response.RespPlainBean;
 import com.example.carbonproject.entity.response.RespUserLoginBean;
-import com.example.carbonproject.mapper.UserMapper;
 import com.example.carbonproject.service.UserService;
-import com.example.carbonproject.utils.CookieUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -18,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Objects;
 

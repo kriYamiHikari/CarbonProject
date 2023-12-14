@@ -1,7 +1,7 @@
 package com.example.carbonproject.config;
 
-import com.example.carbonproject.Annotaion.AdminOnly;
-import com.example.carbonproject.Annotaion.SkipAuth;
+import com.example.carbonproject.annotation.AdminOnly;
+import com.example.carbonproject.annotation.SkipAuth;
 import com.example.carbonproject.controller.advice.CustomException;
 import com.example.carbonproject.service.UserService;
 import com.example.carbonproject.utils.CookieUtils;
@@ -35,13 +35,14 @@ public class TokenInterceptor implements HandlerInterceptor {
 //            response.setHeader("access-control-allow-credentials", "true");
         }
 
-        // 如果是跳过权限控制的接口，直接放过
         if (handler instanceof HandlerMethod) {
             SkipAuth skipAuth = ((HandlerMethod) handler).getMethodAnnotation(SkipAuth.class);
             AdminOnly adminOnly = ((HandlerMethod) handler).getMethodAnnotation(AdminOnly.class);
+            // 如果是跳过权限控制的接口，直接放过
             if (skipAuth != null) {
                 return true;
             }
+            // 如果是管理员接口，判断是否有管理员权限
             if (adminOnly != null) {
                 if (userService.notAdmin(request)) {
                     throw new CustomException(HttpStatus.FORBIDDEN, "权限不足，该接口仅限管理员使用！");

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org///DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.carbonproject.mapper.DataVisualizationMapper">
+    <select id="getLanguageCount">
+        select language as '语言', count(*) as '数量'
+        from music_info
+        group by language
+        order by 数量 desc
+    </select>
+    <select id="getLanguageCountFilter">
+        select language as '语言', count(*) as '数量'
+        from music_info
+        group by language
+        having 数量 > 1
+        order by 数量 desc
+    </select>
+    <select id="getMusicBpmByLanguage">
+        select round(avg(bpm)) as '平均值'
+        from music_info
+        where 1=1
+        <if test="language != null">
+            and language = #{language}
+        </if>
+        and bpm != 0
+    </select>
+    <select id="getGenreCount">
+        select genre as '流派', count(*) as '数量'
+        from music_info
+        where genre != ''
+        group by genre
+        order by 数量 desc
+    </select>
+    <select id="getIntervalCount">
+        select ceil(`interval` / 60) as '分钟内', count(*) as '数量'
+        from music_info
+        group by 分钟内
+        order by 分钟内 desc
+    </select>
+    <select id="getAvgVolumeByArtistFromInterval">
+        select ceil(`interval` / 60) as 'time', round(avg((gain + lra) * peak), 2) as 'volume'
+        from music_info
+        where artist like concat('%', #{artist}, '%')
+        group by time
+    </select>
+    <select id="getAvgVolumeByArtistAndInterval">
+        select ceil(`interval` / 60) as 'time', round(avg((gain + lra) * peak), 2) as 'volume'
+        from music_info
+        where artist like concat('%', #{artist}, '%')
+          and ceil(`interval` / 60) = #{interval}
+        group by time
+    </select>
+    <select id="getIntervalBetweenByArtists">
+        select ceil(`interval` / 60) as time, count(*)
+        from music_info
+        where 1=1
+        <foreach collection="artists" item="artist" open="and artist like concat('%', #{artist}, '%')" close="">
+            or artist like concat('%', #{artist}, '%')
+        </foreach>
+        group by time
+    </select>
+</mapper>
